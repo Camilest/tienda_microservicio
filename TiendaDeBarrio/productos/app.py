@@ -2,6 +2,7 @@ from flask import Flask , url_for, redirect
 from flask.helpers import url_for
 from werkzeug.utils import redirect
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS, cross_origin
 
 aap = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///productos.db'
