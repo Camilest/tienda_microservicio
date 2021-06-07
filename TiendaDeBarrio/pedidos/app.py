@@ -1,8 +1,4 @@
-from TiendaDeBarrio.productos.app import producto
-from TiendaDeBarrio.domiciliarios.app import domiciliario
 from flask import Flask, url_for, redirect
-from flask.helpers import url_for
-from werkzeug.utils import redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS, cross_origin
 
