@@ -17,11 +17,13 @@ class cliente(db.Model):
     cliente_nombre = db.Column(db.String(100))
     cliente_Apellido = db.Column(db.Integer)
     cliente_Cedula = db.Column(db.Integer)
+    cliente_Direccion = db.Column(db.String(100))
 
     def __init__(self, datos):
         self.cliente_nombre = datos["nombre"]
         self.cliente_Apellido = datos["apellido"]
         self.cliente_Cedula = datos["cedula"]
+        self.cliente_Direccion = datos["direccion"]
 
 @app.route("/")
 #@cross_origin
@@ -32,18 +34,20 @@ def principal():
         p = {"id": d.id,
              "nombre": d.cliente_nombre,
              "apellido": d.cliente_Apellido,
-             "cedula": d.cliente_Apellido
+             "cedula": d.cliente_Apellido,
+             "direccion": d.cliente_Direccion
             }
         diccionario_clientes[d.id] = p
     return diccionario_clientes
 
 @app.route("/agregarCliente/<nombre>/<int:valor>/<int:cantidad>")
 #@cross_origin
-def agregar(nombre, cantidad, valor):
+def agregar(nombre, cantidad, cedula, direccion):
     datos = {
         "nombre": nombre,
         "apellido": cantidad,
-        "cedula": valor
+        "cedula": cedula,
+        "direccion": direccion
     }
     p = cliente(datos)
     db.session.add(p)
@@ -60,11 +64,11 @@ def eliminar(id):
 
 @app.route("/actualizarCliente/<int:id>/<nombre>/<int:valor>/<int:cantidad>")
 #@cross_origin
-def actualizar(id, nombre, cantidad, valor):
+def actualizar(id, nombre, cantidad, cedula, direccion):
     p = cliente.query.filter_by(id = id).first()
     p.cliente_nombre = nombre
-    p.cliente_Apellido = valor
-    p.cliente_Cedula = cantidad
+    p.cliente_Apellido = cedula
+    p.cliente_Cedula = direccion
     db.session.commit()
     return redirect(url_for('principal'))
 
@@ -75,7 +79,8 @@ def buscar(id):
     p = {"id": d.id,
         "nombre": d.cliente_nombre,
         "apellido": d.cliente_Apellido,
-        "cedula": d.cliente_Apellido
+        "cedula": d.cliente_Apellido,
+        "direccion": d.cliente_direccion
     }
     return p
 
