@@ -1,3 +1,6 @@
-# Ejemplo microservicios tienda de barrio
-# Jhon Herry Aguiar Moreno
-# Cristhian Camilo Pérez Estrada
+# Tienda MicroServicios 🚀
+
+Integrantes
+
+- Jhon Aguiar Moreno
+- Christian Camilo Perez 
