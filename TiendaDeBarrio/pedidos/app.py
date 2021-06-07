@@ -17,33 +17,37 @@ class pedido(db.Model):
     pedido_nombre = db.Column(db.String(100))
     pedido_valor = db.Column(db.Integer)
     pedido_cantidad = db.Column(db.Integer)
+    pedido_estado = db.Column(db.String(100))
 
     def __init__(self, datos):
         self.pedido_nombre = datos["nombre"]
         self.pedido_valor = datos["valor"]
         self.pedido_cantidad = datos["cantidad"]
+        self.pedido_estado = datos["estado"]
 
 @app.route("/")
 #@cross_origin
 def principal():
     data = pedido.query.all()
-    diccionario_productos = {}
+    diccionario_pedido = {}
     for d in data:
         p = {"id": d.id,
              "nombre": d.pedido_nombre,
              "valor": d.pedido_valor,
-             "cantidad": d.pedido_valor
+             "cantidad": d.pedido_valor,
+             "estado": d.pedido_estado
             }
-        diccionario_productos[d.id] = p
-    return diccionario_productos
+        diccionario_pedido[d.id] = p
+    return diccionario_pedido
 
 @app.route("/agregarPedido/<nombre>/<int:valor>/<int:cantidad>")
 #@cross_origin
-def agregar(nombre, cantidad, valor):
+def agregar(nombre, cantidad, valor, estado):
     datos = {
         "nombre": nombre,
         "cantidad": cantidad,
-        "valor": valor
+        "valor": valor,
+        "estado": estado
     }
     p = pedido(datos)
     db.session.add(p)
@@ -60,11 +64,12 @@ def eliminar(id):
 
 @app.route("/actualizarPedido/<int:id>/<nombre>/<int:valor>/<int:cantidad>")
 #@cross_origin
-def actualizar(id, nombre, cantidad, valor):
+def actualizar(id, nombre, cantidad, valor, estado):
     p = pedido.query.filter_by(id = id).first()
     p.pedido_nombre = nombre
     p.pedido_valor = valor
     p.pedido_cantidad = cantidad
+    p.pedido_estado = estado
     db.session.commit()
     return redirect(url_for('principal'))
 
@@ -75,7 +80,20 @@ def buscar(id):
     p = {"id": d.id,
         "nombre": d.pedido_nombre,
         "valor": d.pedido_valor,
-        "cantidad": d.pedido_valor
+        "cantidad": d.pedido_valor,
+        "estado": d.pedido_estado
+    }
+    return p
+
+@app.route("/estadoPedido/<init:id>")
+#@cross_origin
+def estadoPedido(id):
+    d = pedido.query.filter_by(id = id).first()
+    p = {"id": d.id,
+        "nombre": d.pedido_nombre,
+        "valor": d.pedido_valor,
+        "cantidad": d.pedido_valor,
+        "estado": d.pedido_estado
     }
     return p
 

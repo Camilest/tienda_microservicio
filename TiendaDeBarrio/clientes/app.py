@@ -27,15 +27,15 @@ class cliente(db.Model):
 #@cross_origin
 def principal():
     data = cliente.query.all()
-    diccionario_productos = {}
+    diccionario_clientes = {}
     for d in data:
         p = {"id": d.id,
              "nombre": d.cliente_nombre,
              "apellido": d.cliente_Apellido,
              "cedula": d.cliente_Apellido
             }
-        diccionario_productos[d.id] = p
-    return diccionario_productos
+        diccionario_clientes[d.id] = p
+    return diccionario_clientes
 
 @app.route("/agregarCliente/<nombre>/<int:valor>/<int:cantidad>")
 #@cross_origin
