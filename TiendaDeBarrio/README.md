@@ -2,5 +2,5 @@
 
 Integrantes
 
-- Jhon Aguiar Moreno
-- Christian Camilo Perez 
+- Jhon Henrry Aguiar Moreno
+- Cristhian Camilo Perez Estrada
