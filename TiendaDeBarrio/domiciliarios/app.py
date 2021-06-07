@@ -16,15 +16,13 @@ class domiciliario(db.Model):
     id = db.Column("domiciliary_id", db.Integer, primary_key = True)
     domiciliario_nombre = db.Column(db.String(100))
     domiciliario_apellido = db.Column(db.Integer)
-    domiciliario_cedula = db.Column(db.Integer)
-    direccion_cliente_id = db.Column(db.Integer)
+    domiciliario_cedula = db.Column(db.Integer)    
     pedido_id = db.Column(db.Integer)
 
     def __init__(self, datos):
         self.domiciliario_nombre = datos["nombre"]
         self.domiciliario_apellido = datos["apellido"]
-        self.domiciliario_cedula = datos["cedula"]
-        self.direccion_cliente_id = datos["direccionId"]
+        self.domiciliario_cedula = datos["cedula"]        
         self.pedido_id = datos["pedidoId"]
 
 @app.route("/")

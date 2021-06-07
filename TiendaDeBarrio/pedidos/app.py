@@ -1,3 +1,5 @@
+from TiendaDeBarrio.productos.app import producto
+from TiendaDeBarrio.domiciliarios.app import domiciliario
 from flask import Flask, url_for, redirect
 from flask.helpers import url_for
 from werkzeug.utils import redirect
@@ -18,12 +20,18 @@ class pedido(db.Model):
     pedido_valor = db.Column(db.Integer)
     pedido_cantidad = db.Column(db.Integer)
     pedido_estado = db.Column(db.String(100))
+    cliente_id = db.Column(db.Integer)
+    domiciliario_id = db.Column(db.Integer)
+    producto_id = db.Column(db.Integer)
 
     def __init__(self, datos):
         self.pedido_nombre = datos["nombre"]
         self.pedido_valor = datos["valor"]
         self.pedido_cantidad = datos["cantidad"]
         self.pedido_estado = datos["estado"]
+        self.cliente_id = datos["clienteId"]
+        self.domiciliario_id = datos["domiciliarioId"]
+        self.producto_id = datos["productoId"]
 
 @app.route("/")
 #@cross_origin
@@ -32,22 +40,28 @@ def principal():
     diccionario_pedido = {}
     for d in data:
         p = {"id": d.id,
-             "nombre": d.pedido_nombre,
-             "valor": d.pedido_valor,
-             "cantidad": d.pedido_valor,
-             "estado": d.pedido_estado
+             "nombre" : d.pedido_nombre,
+             "valor" : d.pedido_valor,
+             "cantidad" : d.pedido_valor,
+             "estado" : d.pedido_estado,
+             "clienteId" : d.cliente_id,
+             "domiciliarioId" : d.domiciliario_id,
+             "productoId" : d.producto_id
             }
         diccionario_pedido[d.id] = p
     return diccionario_pedido
 
 @app.route("/agregarPedido/<nombre>/<int:valor>/<int:cantidad>")
 #@cross_origin
-def agregar(nombre, cantidad, valor, estado):
+def agregar(nombre, cantidad, valor, estado, clienteId, domiciliarioId, productoId):
     datos = {
         "nombre": nombre,
         "cantidad": cantidad,
         "valor": valor,
-        "estado": estado
+        "estado": estado,
+        "clienteId": clienteId,
+        "domiciliarioId": domiciliarioId,
+        "productoId": productoId
     }
     p = pedido(datos)
     db.session.add(p)
@@ -64,12 +78,15 @@ def eliminar(id):
 
 @app.route("/actualizarPedido/<int:id>/<nombre>/<int:valor>/<int:cantidad>")
 #@cross_origin
-def actualizar(id, nombre, cantidad, valor, estado):
+def actualizar(id, nombre, cantidad, valor, estado, clienteId, domiciliarioId, productoId):
     p = pedido.query.filter_by(id = id).first()
     p.pedido_nombre = nombre
     p.pedido_valor = valor
     p.pedido_cantidad = cantidad
     p.pedido_estado = estado
+    p.cliente_id = clienteId
+    p.domiciliario_id = domiciliarioId
+    p.producto_Id = productoId
     db.session.commit()
     return redirect(url_for('principal'))
 
@@ -81,7 +98,8 @@ def buscar(id):
         "nombre": d.pedido_nombre,
         "valor": d.pedido_valor,
         "cantidad": d.pedido_valor,
-        "estado": d.pedido_estado
+        "estado": d.pedido_estado,
+        "clienteId": d.cliente_id
     }
     return p
 
@@ -93,7 +111,8 @@ def estadoPedido(id):
         "nombre": d.pedido_nombre,
         "valor": d.pedido_valor,
         "cantidad": d.pedido_valor,
-        "estado": d.pedido_estado
+        "estado": d.pedido_estado,
+        "clienteId": d.cliente_id
     }
     return p
 
