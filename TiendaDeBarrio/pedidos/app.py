@@ -16,7 +16,6 @@ db = SQLAlchemy(app)
 
 class pedido(db.Model):
     id = db.Column("order_id", db.Integer, primary_key = True)
-    pedido_nombre = db.Column(db.String(100))
     pedido_valor = db.Column(db.Integer)
     pedido_cantidad = db.Column(db.Integer)
     pedido_estado = db.Column(db.String(100))
@@ -25,7 +24,6 @@ class pedido(db.Model):
     producto_id = db.Column(db.Integer)
 
     def __init__(self, datos):
-        self.pedido_nombre = datos["nombre"]
         self.pedido_valor = datos["valor"]
         self.pedido_cantidad = datos["cantidad"]
         self.pedido_estado = datos["estado"]
@@ -40,7 +38,6 @@ def principal():
     diccionario_pedido = {}
     for d in data:
         p = {"id": d.id,
-             "nombre" : d.pedido_nombre,
              "valor" : d.pedido_valor,
              "cantidad" : d.pedido_valor,
              "estado" : d.pedido_estado,
@@ -53,9 +50,8 @@ def principal():
 
 @app.route("/agregarPedido/<nombre>/<int:valor>/<int:cantidad>")
 #@cross_origin
-def agregar(nombre, cantidad, valor, estado, clienteId, domiciliarioId, productoId):
+def agregar(cantidad, valor, estado, clienteId, domiciliarioId, productoId):
     datos = {
-        "nombre": nombre,
         "cantidad": cantidad,
         "valor": valor,
         "estado": estado,
@@ -78,9 +74,8 @@ def eliminar(id):
 
 @app.route("/actualizarPedido/<int:id>/<nombre>/<int:valor>/<int:cantidad>")
 #@cross_origin
-def actualizar(id, nombre, cantidad, valor, estado, clienteId, domiciliarioId, productoId):
+def actualizar(id, cantidad, valor, estado, clienteId, domiciliarioId, productoId):
     p = pedido.query.filter_by(id = id).first()
-    p.pedido_nombre = nombre
     p.pedido_valor = valor
     p.pedido_cantidad = cantidad
     p.pedido_estado = estado
@@ -95,7 +90,6 @@ def actualizar(id, nombre, cantidad, valor, estado, clienteId, domiciliarioId, p
 def buscar(id):
     d = pedido.query.filter_by(id = id).first()
     p = {"id": d.id,
-        "nombre": d.pedido_nombre,
         "valor": d.pedido_valor,
         "cantidad": d.pedido_valor,
         "estado": d.pedido_estado,
@@ -108,7 +102,6 @@ def buscar(id):
 def estadoPedido(id):
     d = pedido.query.filter_by(id = id).first()
     p = {"id": d.id,
-        "nombre": d.pedido_nombre,
         "valor": d.pedido_valor,
         "cantidad": d.pedido_valor,
         "estado": d.pedido_estado,
