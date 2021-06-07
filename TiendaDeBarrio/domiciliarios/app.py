@@ -5,47 +5,47 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
-app.config['SQL_ALCHEMY_DATABASE_URI'] = 'sqlite:///productos.db'
+app.config['SQL_ALCHEMY_DATABASE_URI'] = 'sqlite:///domiciliarios.db'
 app.config['SECRET_KEY'] = "123"
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 db = SQLAlchemy(app)
 
-class producto(db.Model):
-    id = db.Column("product_id", db.Integer, primary_key = True)
-    producto_nombre = db.Column(db.String(100))
-    producto_valor = db.Column(db.Integer)
-    producto_cantidad = db.Column(db.Integer)
+class domiciliario(db.Model):
+    id = db.Column("domiciliary_id", db.Integer, primary_key = True)
+    domiciliario_nombre = db.Column(db.String(100))
+    domiciliario_apellido = db.Column(db.Integer)
+    domiciliario_cedula = db.Column(db.Integer)
 
     def __init__(self, datos):
-        self.producto_nombre = datos["nombre"]
-        self.producto_valor = datos["valor"]
-        self.producto_cantidad = datos["cantidad"]
+        self.domiciliario_nombre = datos["nombre"]
+        self.domiciliario_apellido = datos["apellido"]
+        self.domiciliario_cedula = datos["cedula"]
 
 @app.route("/")
 #@cross_origin
 def principal():
-    data = producto.query.all()
-    diccionario_productos = {}
+    data = domiciliario.query.all()
+    diccionario_domiciliarios = {}
     for d in data:
         p = {"id": d.id,
-             "nombre": d.producto_nombre,
-             "valor": d.producto_valor,
-             "cantidad": d.producto_valor
+             "nombre": d.domiciliario_nombre,
+             "apellido": d.domiciliario_apellido,
+             "cedula": d.domiciliario_apellido
             }
-        diccionario_productos[d.id] = p
-    return diccionario_productos
+        diccionario_domiciliarios[d.id] = p
+    return diccionario_domiciliarios
 
 @app.route("/agregarDomiciliario/<nombre>/<int:valor>/<int:cantidad>")
 #@cross_origin
 def agregar(nombre, cantidad, valor):
     datos = {
         "nombre": nombre,
-        "cantidad": cantidad,
-        "valor": valor
+        "apellido": cantidad,
+        "cedula": valor
     }
-    p = producto(datos)
+    p = domiciliario(datos)
     db.session.add(p)
     db.session.commit()
     return redirect(url_for('principal'))
@@ -53,7 +53,7 @@ def agregar(nombre, cantidad, valor):
 @app.route("/eliminarDomiciliario/<int:id>")
 #@cross_origin
 def eliminar(id):
-    p = producto.query.filter_by(id = id).first()
+    p = domiciliario.query.filter_by(id = id).first()
     db.session.delete(p)
     db.session.commit()
     return redirect(url_for('principal'))
@@ -61,21 +61,21 @@ def eliminar(id):
 @app.route("/actualizarDomiciliario/<int:id>/<nombre>/<int:valor>/<int:cantidad>")
 #@cross_origin
 def actualizar(id, nombre, cantidad, valor):
-    p = producto.query.filter_by(id = id).first()
-    p.producto_nombre = nombre
-    p.producto_valor = valor
-    p.producto_cantidad = cantidad
+    p = domiciliario.query.filter_by(id = id).first()
+    p.domiciliario_nombre = nombre
+    p.domiciliario_apellido = valor
+    p.domiciliario_cedula = cantidad
     db.session.commit()
     return redirect(url_for('principal'))
 
 @app.route("/buscarDomiciliario/<int:id>")
 #@cross_origin
 def buscar(id):
-    d = producto.query.filter_by(id = id).first()
+    d = domiciliario.query.filter_by(id = id).first()
     p = {"id": d.id,
-        "nombre": d.producto_nombre,
-        "valor": d.producto_valor,
-        "cantidad": d.producto_valor
+        "nombre": d.domiciliario_nombre,
+        "apellido": d.domiciliario_apellido,
+        "cedula": d.domiciliario_apellido
     }
     return p
 
