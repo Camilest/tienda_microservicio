@@ -5,34 +5,34 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
-app.config['SQL_ALCHEMY_DATABASE_URI'] = 'sqlite:///productos.db'
+app.config['SQL_ALCHEMY_DATABASE_URI'] = 'sqlite:///clientes.db'
 app.config['SECRET_KEY'] = "123"
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 db = SQLAlchemy(app)
 
-class producto(db.Model):
-    id = db.Column("product_id", db.Integer, primary_key = True)
-    producto_nombre = db.Column(db.String(100))
-    producto_valor = db.Column(db.Integer)
-    producto_cantidad = db.Column(db.Integer)
+class cliente(db.Model):
+    id = db.Column("client_id", db.Integer, primary_key = True)
+    cliente_nombre = db.Column(db.String(100))
+    cliente_Apellido = db.Column(db.Integer)
+    cliente_Cedula = db.Column(db.Integer)
 
     def __init__(self, datos):
-        self.producto_nombre = datos["nombre"]
-        self.producto_valor = datos["valor"]
-        self.producto_cantidad = datos["cantidad"]
+        self.cliente_nombre = datos["nombre"]
+        self.cliente_Apellido = datos["apellido"]
+        self.cliente_Cedula = datos["cedula"]
 
 @app.route("/")
 #@cross_origin
 def principal():
-    data = producto.query.all()
+    data = cliente.query.all()
     diccionario_productos = {}
     for d in data:
         p = {"id": d.id,
-             "nombre": d.producto_nombre,
-             "valor": d.producto_valor,
-             "cantidad": d.producto_valor
+             "nombre": d.cliente_nombre,
+             "apellido": d.cliente_Apellido,
+             "cedula": d.cliente_Apellido
             }
         diccionario_productos[d.id] = p
     return diccionario_productos
@@ -42,10 +42,10 @@ def principal():
 def agregar(nombre, cantidad, valor):
     datos = {
         "nombre": nombre,
-        "cantidad": cantidad,
-        "valor": valor
+        "apellido": cantidad,
+        "cedula": valor
     }
-    p = producto(datos)
+    p = cliente(datos)
     db.session.add(p)
     db.session.commit()
     return redirect(url_for('principal'))
@@ -53,7 +53,7 @@ def agregar(nombre, cantidad, valor):
 @app.route("/eliminarCliente/<int:id>")
 #@cross_origin
 def eliminar(id):
-    p = producto.query.filter_by(id = id).first()
+    p = cliente.query.filter_by(id = id).first()
     db.session.delete(p)
     db.session.commit()
     return redirect(url_for('principal'))
@@ -61,21 +61,21 @@ def eliminar(id):
 @app.route("/actualizarCliente/<int:id>/<nombre>/<int:valor>/<int:cantidad>")
 #@cross_origin
 def actualizar(id, nombre, cantidad, valor):
-    p = producto.query.filter_by(id = id).first()
-    p.producto_nombre = nombre
-    p.producto_valor = valor
-    p.producto_cantidad = cantidad
+    p = cliente.query.filter_by(id = id).first()
+    p.cliente_nombre = nombre
+    p.cliente_Apellido = valor
+    p.cliente_Cedula = cantidad
     db.session.commit()
     return redirect(url_for('principal'))
 
 @app.route("/buscarCliente/<int:id>")
 #@cross_origin
 def buscar(id):
-    d = producto.query.filter_by(id = id).first()
+    d = cliente.query.filter_by(id = id).first()
     p = {"id": d.id,
-        "nombre": d.producto_nombre,
-        "valor": d.producto_valor,
-        "cantidad": d.producto_valor
+        "nombre": d.cliente_nombre,
+        "apellido": d.cliente_Apellido,
+        "cedula": d.cliente_Apellido
     }
     return p
 
